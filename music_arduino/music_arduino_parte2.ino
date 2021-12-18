@@ -12,7 +12,7 @@
 
 #define SLAVE_ADDR 0x8
 
-#define SAMPLE_TIME 250
+#define SAMPLE_TIME 32000000
 #define SWITCH_PIN  7
 #define LED_PIN 13
 #define BUF_SIZE 256
@@ -65,7 +65,6 @@ void play_byte(){
 #endif
 
     if (RepMode==0) data=0;
-    //digitalWrite(SOUND_PIN, (data & bitwise));
     OCR2A=data;
 
 }

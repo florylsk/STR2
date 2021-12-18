@@ -28,11 +28,10 @@
 #else
 #define DEV_NAME "/dev/com1"
 #endif
-//TODO: a lo mejorno es sin 1bit
-#define FILE_NAME "/let_it_be.raw"
+#define FILE_NAME "/let_it_be_1bit.raw"
 
 #define PERIOD_TASK_SEC    0            /* Period of Task */
-#define PERIOD_TASK_NSEC  32000000    /* Period of Task */
+#define PERIOD_TASK_NSEC  256000000    /* Period of Task */
 #define SEND_SIZE 128                /* BYTES */
 
 #define TARFILE_START _binary_tarfile_start
@@ -171,7 +170,6 @@ void* receiveOrder(void* args){
         clock_gettime(CLOCK_REALTIME, &end);
 
         diffTime(end, init, &diff);
-        //sleep(2 - diff.tv_sec);
         sleep(2);
         init.tv_sec = init.tv_sec + 2;
     }
@@ -260,27 +258,21 @@ rtems_task Init (rtems_task_argument ignored)
     while(1){
         if ( pthread_create( &t1, &attr, sendSound, NULL) ||
              pthread_setschedparam(t1, SCHED_FIFO, &param) ) {
-            printf(
-                    "Thread cannot be created or you have not enough privileges \n"
-                    "    to set priority!!!!\n");
+            printf("Thread cannot be created or you have not enough privileges \n");
             exit(1);
         }
         param.sched_priority = sched_get_priority_max(SCHED_FIFO) - 1;
         pthread_attr_setschedparam(&attr, &param);
         if ( pthread_create( &t2, &attr, receiveOrder, NULL) ||
              pthread_setschedparam(t2, SCHED_FIFO, &param) ) {
-            printf(
-                    "Thread cannot be created or you have not enough privileges \n"
-                    "    to set priority!!!!\n");
+            printf("Thread cannot be created or you have not enough privileges \n");
             exit(1);
         }
         param.sched_priority = sched_get_priority_max(SCHED_FIFO) -2;
         pthread_attr_setschedparam(&attr, &param);
         if ( pthread_create( &t3, &attr, showRepMode, NULL) ||
              pthread_setschedparam(t3, SCHED_FIFO, &param) ) {
-            printf(
-                    "Thread cannot be created or you have not enough privileges \n"
-                    "    to set priority!!!!\n");
+            printf("Thread cannot be created or you have not enough privileges \n");
             exit(1);
         }
 
